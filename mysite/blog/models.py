@@ -4,6 +4,7 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.urls import reverse
+from taggit.managers import TaggableManager
 
 
 class Post(models.Model):
@@ -22,7 +23,7 @@ class Post(models.Model):
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft', verbose_name='Статус публикации')
     image = models.ImageField(upload_to='product_images/', blank=False, verbose_name='Изображение')
     post_header = models.CharField(max_length=250, default='HEADER')
-
+    tags = TaggableManager()
 
     class Meta:
         ordering = ('-publish',)
@@ -51,7 +52,7 @@ class PostPoint(models.Model):
         return 'Пункт поста {}'.format(self.post.title)
 
 class Comment(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comment')
     name = models.CharField(max_length=80)
     email = models.EmailField()
     body = models.TextField()
